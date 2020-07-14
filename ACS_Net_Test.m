@@ -1,4 +1,3 @@
-addpath('BigData');
 clear;
 t1 = clock;
 %OriginImage = imread('BigData/datasets/Test/Fish.jfif');
