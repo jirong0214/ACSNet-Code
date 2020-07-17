@@ -1,6 +1,4 @@
 function [net, info] = SCSNet_dag(varargin)
-
-
 opts.batchNormalization = false ;
 opts.networkType = 'dagnn' ;
 [opts, varargin] = vl_argparse(opts, varargin) ;
@@ -15,30 +13,15 @@ opts.expDir = fullfile(vl_rootnn, 'data', ['dcCSNetRes-' sfx]) ;
 % opts.imdbPath = fullfile(opts.expDir, 'data_x3_SR_64x64_raw.mat');
 opts.train = struct() ;
 opts = vl_argparse(opts, varargin) ;
-if ~isfield(opts.train, 'gpus'), opts.train.gpus = []; end %设置是否使用gpu；
-
+if ~isfield(opts.train, 'gpus'), opts.train.gpus = [1]; end %GPU Settings! ! !；
 % --------------------------------------------------------------------
 %                                                         Prepare data
 % --------------------------------------------------------------------
-
-% net = cnn_mnist_init('batchNormalization', opts.batchNormalization, ...
-%                      'networkType', opts.networkType) ;
-net = DeepReconstruction('networkType', opts.networkType) ;      %选择网络类型！！！！！！！！！！！！！！！
-
-% if exist(opts.imdbPath, 'file')
- imdb = load(net.meta.imdbPath) ;
-% else
-%   imdb = getMnistImdb(opts) ;
-%   mkdir(opts.expDir) ;
-%   save(opts.imdbPath, '-struct', 'imdb') ;
-% end
-
-% net.meta.classes.name = arrayfun(@(x)sprintf('%d',x),1:10,'UniformOutput',false) ;
-
+net = DeepReconstruction('networkType', opts.networkType) ;%Choose which network to train！！！
+imdb = load(net.meta.imdbPath) ;
 % --------------------------------------------------------------------
 %                                                                Train
 % --------------------------------------------------------------------
-
 switch opts.networkType
   case 'simplenn', trainfn = @cnn_rsCSNetRes_train ;
   case 'dagnn', trainfn = @SCSNet_train_dag ;

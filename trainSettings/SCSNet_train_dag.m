@@ -15,24 +15,20 @@ opts.beta1   = 0.9;
 opts.beta2   = 0.999;
 opts.alpha   = 0.01;
 opts.epsilon = 1e-8;
-
-%%% solver: SGD
-opts.solver = 'SGD';
+opts.solver = 'SGD';%%% solver: SGD
 opts.learningRate = 0.01;
 opts.weightDecay  = 0.0001;
 opts.momentum     = 0.9 ;
-
 opts.solver = net.meta.solver;
-
-opts.expDir = 'testmodel';%fullfile('data','exp') ;
+opts.expDir = '../BigData/testmodel';%fullfile('data','exp') ;
 opts.continue = true ;
 opts.batchSize = 256 ;
 opts.numSubBatches = 1 ;
 opts.train = [] ;
 opts.val = [] ;
-opts.gpus = [] ;
+opts.gpus = [1] ; 
 opts.prefetch = false ;
-opts.numEpochs =50 ;    %set epoch times
+opts.numEpochs =100 ;    %set epoch times
 % opts.numEpochs = 300 ;
 opts.learningRate = 0.001 ;
 opts.weightDecay = 0.0005 ;

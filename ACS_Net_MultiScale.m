@@ -35,7 +35,7 @@ subplot(1,4,2);
 imshow(initEnResidual);
 title('补充采样的初始重构残差');
 OriginImage = size2same(initEnResidual,OriginImage);  %把原图裁剪为和结果图一样大的；
-fprintf('补充的平均采样率 = %g\n',AvgSampleRate);
+fprintf('Average Sample Rate = %g\n',AvgSampleRate);
 
 TotalinitRec = initEnResidual + baseInitRec; %基准初始重构+补充采样的残差=恢复的初始重构
 subplot(1,4,3);
@@ -57,8 +57,8 @@ imshow(OriginImage);
 title('原图');
 t2 = clock;
 runtime = etime(t2,t1);
-
-imwrite(baseInitRec,'/Users/tianjirong/OneDrive - stu.ouc.edu.cn/代码/ACSNet/ACSNet-Code/RecResult/策略2/FIsh/baseInitRec0.05.jpg'); 
-imwrite(initEnResidual,'/Users/tianjirong/OneDrive - stu.ouc.edu.cn/代码/ACSNet/ACSNet-Code/RecResult/策略2/FIsh/initEnResidual.jpg'); 
-imwrite(TotalinitRec,'/Users/tianjirong/OneDrive - stu.ouc.edu.cn/代码/ACSNet/ACSNet-Code/RecResult/策略2/FIsh/TotalinitRec.jpg'); 
-
+% 
+% imwrite(baseInitRec,'/Users/tianjirong/OneDrive - stu.ouc.edu.cn/代码/ACSNet/ACSNet-Code/RecResult/策略2/FIsh/baseInitRec0.05.jpg'); 
+% imwrite(initEnResidual,'/Users/tianjirong/OneDrive - stu.ouc.edu.cn/代码/ACSNet/ACSNet-Code/RecResult/策略2/FIsh/initEnResidual.jpg'); 
+% imwrite(TotalinitRec,'/Users/tianjirong/OneDrive - stu.ouc.edu.cn/代码/ACSNet/ACSNet-Code/RecResult/策略2/FIsh/TotalinitRec.jpg'); 
+% 

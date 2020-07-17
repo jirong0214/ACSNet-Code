@@ -6,8 +6,7 @@ close all
 %   'expDir', './TrainedModel');
 addpath('BigData');
 [net_bn, info_bn] = SCSNet_dag(...
-  'expDir', '../BigData/testmodel_batchsize64');
-
-% Call 'SCSNet_dag.m' Function to choose network to trainï¿½ï¿½
+  'expDir', '../BigData/testmodel_batchsize32');
+% Call 'SCSNet_dag.m' Function to choose network to train£º
 % case 1.simplenn -->cnn_rsCSNetRes_train     
 % case 2.dagnn     --> SCSNet_train_dag    % we choose this one;

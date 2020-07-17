@@ -1,9 +1,7 @@
 function net = DeepReconstruction( varargin )
-%CNN_DDCN_INIT Summary of this function goes here
-%   Detailed explanation goes here
+%Deep reconstruction net for Initial rec to Deep rec;
 net = dagnn.DagNN();
-%net.meta.imdbPath ='D:\下载内容\SCSNet-master\SCSNet-Code\model_64_96_Adam\imdb_BSD500train_patch96_batch64_stride32.mat';
-net.meta.imdbPath ='./IMDB/IMDB/BSD500train_TestSet12_batchsize64_imagesize96_stride32.mat'; %选择数据集路径
+net.meta.imdbPath ='../BigData/IMDB/Initial2Deep_IMDB.mat'; %Choose Dataset path;
 d=128;
 s=32;
 rng('default');
@@ -14,17 +12,18 @@ net.meta.solver = 'Adam';
 net.meta.inputSize = [96 96] ;
 % net.meta.trainOpts.weightDecay = 0.0001;
 % net.meta.trainOpts.momentum = 0.9;
-net.meta.trainOpts.batchSize = 16;
+net.meta.trainOpts.batchSize = 64;
 % net.meta.trainOpts.batchSize = 32; set batchsize
 net.meta.trainOpts.learningRate = [logspace(-3,-3,50) logspace(-4,-4,30) logspace(-5,-5,20)];
-net.meta.trainOpts.numEpochs = numel(net.meta.trainOpts.learningRate) ;  %修改epoch
-net.meta.trainOpts.numEpochs = 50 ; 
+net.meta.trainOpts.numEpochs = numel(net.meta.trainOpts.learningRate) ;  %Define training epoch ! ! !
+net.meta.trainOpts.numEpochs = 100 ; 
 net.meta.adjGradClipping = false;
 enl = 1;
 
 % net.meta.derOutputs = {'s01pdist',1,'pdistInits01',1,'s02pdist',1,'pdistInits02',1,'s03pdist',1,'pdistInits03',...
 % 1,'s04pdist',1,'pdistInits04',1,'s05pdist',1,'pdistInits05',1,'s06pdist',1,'pdistInits06',1,'s07pdist',1,'pdistInits07',1};
-% %修改了这里！
+
+% %Modified here to fit our output ! ！!
 net.meta.derOutputs = {'s01pdist',1};
 
 
@@ -75,7 +74,8 @@ block = dagnn.Conv('size',  [3 3 d 1], 'hasBias', true, ...
 lName = ['s0' num2str(enl) 'prediction'];
 net.addLayer(lName, block, ['s0'  num2str(enl) 'dr16_relu'], lName, {[lName '_f'], [lName '_b']});
 
-net.addLayer(['s0' num2str(enl) 'dr_pred'],dagnn.Sum(),{['s0' num2str(enl) 'prediction'],['s0' num2str(enl) 'combine']},['s0' num2str(enl) 'dr_pred']);
+% net.addLayer(['s0' num2str(enl) 'dr_pred'],dagnn.Sum(),{['s0' num2str(enl) 'prediction'],['s0' num2str(enl) 'combine']},['s0' num2str(enl) 'dr_pred']);
+net.addLayer(['s0' num2str(enl) 'dr_pred'],dagnn.Sum(),{['s0' num2str(enl) 'prediction'],'input'},['s0' num2str(enl) 'dr_pred']);
 net.addLayer(['s0' num2str(enl) 'pdist'],dagnn.EuclidLoss(),{['s0' num2str(enl) 'dr_pred'],'label'},['s0' num2str(enl) 'pdist']);
 net.initParams();
 end

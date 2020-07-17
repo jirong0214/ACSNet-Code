@@ -7,15 +7,17 @@ addpath(genpath('./.'));
 
 batchSize      = 64;        %%% batch size
 max_numPatches = batchSize*1400; 
-modelName      = 'IMDB';
+modelName      = '../BigData/IMDB';
 
 
 %%% training and testing
 % folder_train  = '\datasets\BSDS500\train';  %%% training
 % folder_test   = '\datasets\Set12';    %%% testing
 
-folder_train  = '/Users/tianjirong/OneDrive - stu.ouc.edu.cn/ДњТы/ACSNet/ACSNet/ACSNet-Code/datasets/Set12';  %%% training
-folder_test   = '/Users/tianjirong/OneDrive - stu.ouc.edu.cn/ДњТы/ACSNet/ACSNet/ACSNet-Code/datasets/Set5';    %%% testing
+folder_train_initialRec      = '../BigData/datasets/DataSetForInitial2Deep/InitialRecTrainSet';  %%% training dataset : initial rec;
+folder_train_Originimage = '../BigData/datasets/DataSetForInitial2Deep/OriginTrainSet';   %%% training dataset :origin image;
+folder_test_initialRec       = '../BigData/datasets/DataSetForInitial2Deep/initialRecforTest';    %%% testing dataset : initial rec;
+folder_test_Originimage  = '../BigData/datasets/DataSetForInitial2Deep/originImageforTest';    %%% testing  dataset :origin image;
 
 size_input    = 96;          %%% training
 size_label    = 96;          %%% testings
@@ -25,9 +27,13 @@ val_train     = 0;           %%% training % default
 val_test      = 1;           %%% testing  % default
 
 %%% training patches
-[inputs, labels, set]  = patches_generation(size_input,size_label,stride_train,folder_train,val_train,max_numPatches,batchSize);
+[inputs, Invalidlabels, Invalidset]  = patches_generation(size_input,size_label,stride_train,folder_train_initialRec,val_train,max_numPatches,batchSize);
+[Invalidinputs, labels, set]  = patches_generation(size_input,size_label,stride_train,folder_train_Originimage,val_train,max_numPatches,batchSize);
+
 %%% testing  patches
-[inputs2,labels2,set2] = patches_generation(size_input,size_label,stride_test,folder_test,val_test,max_numPatches,batchSize);
+[inputs2,Invalidlabels2,Invalidset2] = patches_generation(size_input,size_label,stride_test,folder_test_initialRec,val_test,max_numPatches,batchSize);
+[Invalidinputs2,labels2,set2] = patches_generation(size_input,size_label,stride_test,folder_test_Originimage,val_test,max_numPatches,batchSize);
+
 
 inputs   = cat(4,inputs,inputs2);      clear inputs2;
 labels   = cat(4,labels,labels2);      clear labels2;
@@ -38,5 +44,5 @@ if ~exist(modelName,'file')
 end
 
 %%% save data
-save(fullfile(modelName,'SmallTestIMDB'), 'inputs','labels','set','-v7.3')
+save(fullfile(modelName,'Initial2Deep_IMDB'), 'inputs','labels','set','-v7.3')
 
