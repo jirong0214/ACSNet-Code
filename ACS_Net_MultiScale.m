@@ -1,64 +1,59 @@
-%%
 % This is an implement of strategy 2(add Sample strategy );
-%%
-clear;
+clear
 t1 = clock;
-addpath('BigData');
-OriginImage = imread('datasets/Test/Fish.jfif');
-OriginImage = rgb2gray(OriginImage);
+
+imageNum = 499;%Choose image nums;
+image = imread(['../BigData/datasets/reference-890/',num2str(imageNum),'_img_.png']);
+if size(image,3)==3
+    image = rgb2ycbcr(image);
+    image = im2double(image(:, :, 1));  %输入图像转为灰度；
+else
+    image = im2double(image);
+end
+image =modcrop(image,32); % convert image -> can be mod by 32;
+
+
+baseInitRec = ACS_Net_initRec(image,0.05); %base Sampling by SR of 0.05;
+
+
 delete('SampleRate.txt');
 blockSize = 64;
-
-%搞一个基准的初次采样(自己选择0.01/0.05/0.1等)，并初始重构；
-baseInitRec = ACS_Net_initRec(OriginImage,0.05); %0.05
-subplot(1,4,1);
-imshow(baseInitRec);
-title('0.05采样率的基准初始重构');
-
-%计算采样率数组，分配采样率；
-fun = @(block_struct)ComputeEntropy(block_struct.data); 
-Etpy  = blockproc(OriginImage,[blockSize,blockSize],fun);%熵矩阵；
+fun = @(block_struct)ComputeEntropy(block_struct.data); %Compute Entropies and distribute SRs;
+Etpy  = blockproc(image,[blockSize,blockSize],fun);%Entropy matrix
 E1d = Etpy(:);%获得了一个N行1列的熵向量；
 E03 = roundn(E1d,-3);%保留3位小数
 global Strategy2EArray;
-Strategy2EArray = sort(E03);%数组排序
+Strategy2EArray = sort(E03);
 
-%分块分不同采样率补充采样；
-fun = @(block_struct) ACS_Net_initResidual(block_struct.data,0.05); %基准采样率0.05；
-initEnResidual  = blockproc(OriginImage,[blockSize blockSize],fun);
+%分块分不同采样率补充采样,获得残差；
+fun = @(block_struct) MutiScaleResidual(block_struct.data); 
+initEnResidual  = blockproc(image,[blockSize blockSize],fun);
 filename = 'SampleRate.txt';
 SRs=textread(filename,'%f');
 AvgSampleRate = mean(SRs);
 
 
+TotalinitRec = initEnResidual + baseInitRec; %基准初始重构+补充采样的残差=恢复的初始重构
+
+
+[psnr_base,ssim_base]        = Cal_PSNRSSIM(im2uint8(image) ,im2uint8(baseInitRec),0,0);
+[psnr_baseAddresidual,ssim_baseAddresidual]  = Cal_PSNRSSIM(im2uint8(image) ,im2uint8(TotalinitRec),0,0);
+
+%show result
+subplot(1,4,1);
+imshow(baseInitRec);
+title('0.05采样率的基准初始重构');
 subplot(1,4,2);
 imshow(initEnResidual);
 title('补充采样的初始重构残差');
-OriginImage = size2same(initEnResidual,OriginImage);  %把原图裁剪为和结果图一样大的；
-fprintf('Average Sample Rate = %g\n',AvgSampleRate);
-
-TotalinitRec = initEnResidual + baseInitRec; %基准初始重构+补充采样的残差=恢复的初始重构
 subplot(1,4,3);
 imshow(TotalinitRec);
 title('补充采样后的初始重构')
-
-if size(OriginImage,3)==3
-    OriginImage = rgb2ycbcr(OriginImage);
-    OriginImage = im2double(OriginImage(:, :, 1));  %输入图像转为灰度；
-else
-    OriginImage =im2double(OriginImage);
-end
-OriginImEntropy = entropy(OriginImage);
-OriginImage = size2same(TotalinitRec,OriginImage);  %把原图裁剪为和结果图一样大的；
-PSNR_MultiScaleAdd_Init = psnr(double(TotalinitRec),OriginImage);
-SSIM_MultiScaleAdd_Init = ssim(double(TotalinitRec),OriginImage);
 subplot(1,4,4);
-imshow(OriginImage);
+imshow(image);
 title('原图');
+fprintf('Average Sample Rate = %g\n',AvgSampleRate);
 t2 = clock;
 runtime = etime(t2,t1);
-% 
-% imwrite(baseInitRec,'/Users/tianjirong/OneDrive - stu.ouc.edu.cn/代码/ACSNet/ACSNet-Code/RecResult/策略2/FIsh/baseInitRec0.05.jpg'); 
-% imwrite(initEnResidual,'/Users/tianjirong/OneDrive - stu.ouc.edu.cn/代码/ACSNet/ACSNet-Code/RecResult/策略2/FIsh/initEnResidual.jpg'); 
-% imwrite(TotalinitRec,'/Users/tianjirong/OneDrive - stu.ouc.edu.cn/代码/ACSNet/ACSNet-Code/RecResult/策略2/FIsh/TotalinitRec.jpg'); 
-% 
+
+imwrite(TotalinitRec,['../BigData/datasets/reference-890_InitRec/',num2str(imageNum),'_img_.png']); 

@@ -14,6 +14,7 @@ end
 
 for i = 1 : length(filepaths)
     image = imread(fullfile(folder,filepaths(i).name)); % uint8
+    fprintf('Processing image: %s\n',filepaths(i).name);
     %[~, name, exte] = fileparts(filepaths(i).name);
     if size(image,3) == 3
         image = rgb2ycbcr(image); % uint8
@@ -41,9 +42,9 @@ inputs = inputs(:,:,:,1:(size(inputs,4)-mod(size(inputs,4),batchSize)));
 labels = labels(:,:,:,1:(size(labels ,4)-mod(size(labels ,4),batchSize)));
 % labels = shave(inputs,[padding,padding])-labels; %%% residual image patches; pay attention to this!!!
 
-order  = randperm(size(inputs,4));
-inputs = inputs(:, :, 1, order);
-labels = labels(:, :, 1, order);
+% order  = randperm(size(inputs,4));%random sort;
+% inputs = inputs(:, :, 1, order);
+% labels = labels(:, :, 1, order);
 
 set    = uint8(ones(1,size(inputs,4)));
 if mode == 1

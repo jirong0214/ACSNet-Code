@@ -6,18 +6,19 @@ opts.networkType = 'dagnn' ;
 sfx = opts.networkType ;
 % if opts.batchNormalization, sfx = [sfx '-bnorm'] ; end
 opts.expDir = fullfile(vl_rootnn, 'data', ['dcCSNetRes-' sfx]) ;
-%opts.expDir = '../../BigData/testmodel';
+%opts.expDir = '../BigData/model';
 [opts, varargin] = vl_argparse(opts, varargin) ;
 
 % opts.dataDir = fullfile(vl_rootnn, 'data', 'mnist') ;
 % opts.imdbPath = fullfile(opts.expDir, 'data_x3_SR_64x64_raw.mat');
 opts.train = struct() ;
 opts = vl_argparse(opts, varargin) ;
-if ~isfield(opts.train, 'gpus'), opts.train.gpus = [1]; end %GPU Settings! ! !£»
+if ~isfield(opts.train, 'gpus'), opts.train.gpus = [1]; end %GPU Settings! ! !
 % --------------------------------------------------------------------
 %                                                         Prepare data
 % --------------------------------------------------------------------
-net = DeepReconstruction('networkType', opts.networkType) ;%Choose which network to train£¡£¡£¡
+%net = DeepReconstruction('networkType', opts.networkType) ;%Choose which network to train
+net = DenseDeepReconstruction('networkType', opts.networkType);
 imdb = load(net.meta.imdbPath) ;
 % --------------------------------------------------------------------
 %                                                                Train
@@ -31,7 +32,7 @@ end
   'expDir', opts.expDir, ...
   net.meta.trainOpts, ...
   opts.train, ...
-  'val', find(imdb.set == 2),...
+  'val', imdb.set == 2,...
   'derOutputs',net.meta.derOutputs);
 
 % --------------------------------------------------------------------
@@ -42,7 +43,7 @@ switch lower(opts.networkType)
     fn = @(x,y) getSimpleNNBatch(x,y) ;
   case 'dagnn'
     bopts = struct('numGpus', numel(opts.train.gpus)) ;
-    fn = @(x,y) getDagNNBatch(bopts,x,y) ;
+    fn = @(x,y) getDagNNBatch(bopts,x,y);
 end
 
 % --------------------------------------------------------------------

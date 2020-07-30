@@ -1,9 +1,9 @@
-function initResidual = ACS_Net_initResidual(image,baseSR)
-netfolder = '../Bigdata/TrainedModel';% tianjirong's trained model folder��
-netpaths = dir(fullfile(netfolder,['net-epoch-50.mat']));  % switch net path
+function initResidual = ACS_Net_initResidual(image)
+netfolder = '../Bigdata/model/TrainedModel';% tianjirong's trained model folder
+netpaths = dir(fullfile(netfolder,['net-epoch-50.mat'])); %switch net path
 net = load(fullfile(netfolder,netpaths.name));
 net = dagnn.DagNN.loadobj(net.net);
-
+baseSR =0.05;
 global useGPU;
 if useGPU 
     net.move('gpu');
@@ -79,7 +79,7 @@ end
 if baseSR == 0.05
     switch Rate
         case 0.01
-            initResidual  = zeros(size(image));
+            initResidual = zeros(size(image));
         case 0.05
             initResidual = zeros(size(image));
         case 0.1

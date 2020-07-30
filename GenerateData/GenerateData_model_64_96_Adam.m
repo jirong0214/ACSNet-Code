@@ -14,8 +14,8 @@ modelName      = '../BigData/IMDB';
 % folder_train  = '\datasets\BSDS500\train';  %%% training
 % folder_test   = '\datasets\Set12';    %%% testing
 
-folder_train_initialRec      = '../BigData/datasets/DataSetForInitial2Deep/InitialRecTrainSet';  %%% training dataset : initial rec;
-folder_train_Originimage = '../BigData/datasets/DataSetForInitial2Deep/OriginTrainSet';   %%% training dataset :origin image;
+folder_train_initialRec      = '../BigData/datasets/DataSetForInitial2Deep/initialRecforTrain';  %%% training dataset : initial rec;
+folder_train_Originimage = '../BigData/datasets/DataSetForInitial2Deep/originImageforTrain';   %%% training dataset :origin image;
 folder_test_initialRec       = '../BigData/datasets/DataSetForInitial2Deep/initialRecforTest';    %%% testing dataset : initial rec;
 folder_test_Originimage  = '../BigData/datasets/DataSetForInitial2Deep/originImageforTest';    %%% testing  dataset :origin image;
 
@@ -39,10 +39,10 @@ inputs   = cat(4,inputs,inputs2);      clear inputs2;
 labels   = cat(4,labels,labels2);      clear labels2;
 set      = cat(2,set,set2);            clear set2;
 
-if ~exist(modelName,'file')
-    mkdir(modelName);
-end
+% if ~exist(modelName,'file')
+%     mkdir(modelName);
+% end
 
 %%% save data
-save(fullfile(modelName,'Initial2Deep_IMDB'), 'inputs','labels','set','-v7.3')
+save(fullfile(modelName,'Initial2Deep_BSDS500_bSize64_patch96_stride32_IMDB'), 'inputs','labels','set','-v7.3')
 

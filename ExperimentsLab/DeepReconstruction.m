@@ -1,22 +1,22 @@
 function net = DeepReconstruction( varargin )
 %Deep reconstruction net for Initial rec to Deep rec;
 net = dagnn.DagNN();
-net.meta.imdbPath ='../BigData/IMDB/Initial2Deep_IMDB.mat'; %Choose Dataset path;
+net.meta.imdbPath ='../BigData/IMDB/Initial2Deep_bSize64_patch96_stride96_IMDB.mat'; %Choose Dataset path;
 d=128;
 s=32;
 rng('default');
-rng(0) ;
+rng(0);
 reluLeak = 0;
 % bnormal =false;
 net.meta.solver = 'Adam';
-net.meta.inputSize = [96 96] ;
+net.meta.inputSize = [96 96];
 % net.meta.trainOpts.weightDecay = 0.0001;
 % net.meta.trainOpts.momentum = 0.9;
 net.meta.trainOpts.batchSize = 64;
 % net.meta.trainOpts.batchSize = 32; set batchsize
 net.meta.trainOpts.learningRate = [logspace(-3,-3,50) logspace(-4,-4,30) logspace(-5,-5,20)];
 net.meta.trainOpts.numEpochs = numel(net.meta.trainOpts.learningRate) ;  %Define training epoch ! ! !
-net.meta.trainOpts.numEpochs = 100 ; 
+net.meta.trainOpts.numEpochs = 100; 
 net.meta.adjGradClipping = false;
 enl = 1;
 

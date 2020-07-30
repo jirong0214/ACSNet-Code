@@ -79,13 +79,13 @@ for i = 1:length(filepaths)
     net.eval({'input',input});
 
     if useGPU
-         %output01 = gather(net.vars(net.getVarIndex('s01dr_pred')).value);% + gather(net.vars(net.getVarIndex('s02dr_pred')).value);
+          %output01 = gather(net.vars(net.getVarIndex('s01dr_pred')).value);% + gather(net.vars(net.getVarIndex('s02dr_pred')).value);
 %          output02 = gather(net.vars(net.getVarIndex('s02dr_pred')).value);
 %          output03 = gather(net.vars(net.getVarIndex('s03dr_pred')).value);%此 MATLAB 函数 对尚未计算、但需要计算的 tall 数组 X 执行所有必需的排队运算，然后将结果作为 Y 收集到内存中。
 %          output04 = gather(net.vars(net.getVarIndex('s04dr_pred')).value);
 %          output05 = gather(net.vars(net.getVarIndex('s05dr_pred')).value);
 %          output06 = gather(net.vars(net.getVarIndex('s06dr_pred')).value);
-          output07 = gather(net.vars(net.getVarIndex('s07dr_pred')).value);
+             output07 = gather(net.vars(net.getVarIndex('s07dr_pred')).value);
     else
          output01 = net.vars(net.getVarIndex('s01dr_pred')).value;
          output02 = net.vars(net.getVarIndex('s02dr_pred')).value;

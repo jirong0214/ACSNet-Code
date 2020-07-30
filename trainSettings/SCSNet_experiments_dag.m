@@ -1,13 +1,6 @@
 %% Experiment with the cnn_mnist_fc_bnorm
+% Call 'SCSNet_dag.m' Function to choose network to train !
 clc
 close all
-
-% [net_bn, info_bn] = SCSNet_dag(...
-%   'expDir', './TrainedModel');
-addpath('BigData');
-[net_bn, info_bn] = SCSNet_dag(...
-  'expDir', '../BigData/testmodel_batchsize64');
-
-% Call 'SCSNet_dag.m' Function to choose network to train
-% case 1.simplenn -->cnn_rsCSNetRes_train     
-% case 2.dagnn     --> SCSNet_train_dag    % we choose this one;
+addpath('matconvnet-1.0-beta25');
+[net_bn, info_bn] = SCSNet_dag('expDir', '../BigData/model/Init2DeepModel/BSDS500_Initial2Deep_bSize64_patch96_stride32');
