@@ -5,18 +5,17 @@ netpaths = dir(fullfile(netfolder,'net-epoch-100.mat')); % switch net path
 net = load(fullfile(netfolder,netpaths.name)); 
 net = dagnn.DagNN.loadobj(net.net);
 
-imageNum = 450;%选择第几张图
-%imageNum = 499;%选择第几张图
-InitialRecImage = imread(['../BigData/datasets/reference-890_InitRec/',num2str(imageNum),'_img_.png']);
-GroundTruth = imread(['../BigData/datasets/reference-890/',num2str(imageNum),'_img_.png']);
+imageNo = 450;%选择第几张图
+InitialRecImage = imread(['../BigData/datasets/reference-890_InitRec/','image',num2str(imageNo),'.png']);
+GroundTruth = imread(['../BigData/datasets/reference-890/','image',num2str(imageNo),'.png']);
 GroundTruth = modcrop(GroundTruth,32);
 
 %Weather Show or Save  Results ：
 showResult  = 1; 
-SaveImage = 0;
-
-useGPU = 0;  
-if useGPU
+saveResult = 1;
+global useGPU;
+useGPU =0;
+if useGPU == 1
 net.move('gpu');
 end
 
@@ -55,7 +54,6 @@ if showResult
     title('DeepRecResult');
 end
 
-
 %compute PSNR/SSIM etc.
 [psnr_init,ssim_init]        = Cal_PSNRSSIM(im2uint8(GroundTruth) ,im2uint8(InitialRecImage),0,0);
 [psnr_deep,ssim_deep]  = Cal_PSNRSSIM(im2uint8(GroundTruth) ,im2uint8(DeepRecImage),0,0);
@@ -65,7 +63,7 @@ disp('__________________________________________________');
 fprintf('PSNR After Deep Reconstruction :%g\n',psnr_deep);
 fprintf('SSIM After Deep Reconstruction :%g\n',ssim_deep);
 
-if SaveImage == 1
-     imwrite(DeepRecImage,['../BigData/datasets/reference-890_FinalRec/',num2str(imageNum),'_img_.png']); 
+if saveResult == 1
+     imwrite(DeepRecImage,['../BigData/datasets/reference-890_FinalRec/','image',num2str(imageNo),'.png']); 
 end
 toc

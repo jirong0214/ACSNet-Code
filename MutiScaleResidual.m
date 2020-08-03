@@ -1,11 +1,11 @@
-function [initResidual] = MutiScaleResidual(image)
+function [initResidual] = MutiScaleResidual(image,entropyVector,sortedEntropyVector)
+global blockNo;
+blockNo = blockNo + 1;
+global showDetailMsg;
+%find the index and distribute Sample Rate by it's rank;
+index = find(sortedEntropyVector == entropyVector(blockNo));
+rank =(index)/length(sortedEntropyVector);
 
-%compute Entropy of the block;
-ImEntropy09 = ComputeEntropy(image);
-ImEntropy = roundn(ImEntropy09,-3);
-global Strategy2EArray;
-index = find(Strategy2EArray == ImEntropy);
-rank =(index)/length(Strategy2EArray);
 if rank < 0.45
     Rate = 0.05;
 elseif  rank <0.85
@@ -30,12 +30,13 @@ elseif Rate == 0.3
     initResidual = getLayerResidual05(image);
 end
 
-% fprintf("Index of this block is %g\n",index);
-% format long g;
-% fprintf("Entropy of this block is %g\n",ImEntropy);
-% format long g;
-% fprintf('SampleRate of this block is %g\n',Rate);
-% format long g;
+if showDetailMsg == 1
+    disp(num2str(blockNo));
+    fprintf("Index of this block is %g\t",index);
+    format long g;
+    fprintf('SampleRate of this block is %g\n',Rate);
+    format long g;
+end
 save('SampleRate.txt','Rate','-append','-ascii');
 end
 

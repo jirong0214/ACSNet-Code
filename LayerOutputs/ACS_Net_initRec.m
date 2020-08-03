@@ -5,6 +5,7 @@ netpaths = dir(fullfile(netfolder,['subnetInit0',num2str(numSubNet),'.mat']));  
 net = load(fullfile(netfolder,netpaths.name)); 
 net = dagnn.DagNN.loadobj(net.net);
 
+global showDetailMsg;
 global useGPU;
 if useGPU
 net.move('gpu');
@@ -42,5 +43,7 @@ switch Rate
     case 0.05
         initRec = s02TotalInit; 
 end
-%fprintf('Basic Sample Rate is %d\n',Rate);
+if showDetailMsg == 1
+    fprintf('Basic Sample Rate is %d\n',Rate);
+end
 end

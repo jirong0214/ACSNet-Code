@@ -4,7 +4,7 @@ function [residual04] = getLayerResidual04(image)
     netpaths = dir(fullfile(netfolder,['subNetInit04.mat'])); 
     net = load(fullfile(netfolder,netpaths.name)); 
     net = dagnn.DagNN.loadobj(net.net);
-    global useGPU;
+global useGPU;
 if useGPU 
     net.move('gpu');
 end
